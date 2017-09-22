@@ -78,9 +78,29 @@ walle {
 String channel = WalleChannelReader.getChannel(this.getApplicationContext());
 ```
 
-#### 如何生成渠道包
+#### 如何生成渠道包 
 
 生成渠道包的方式是和`assemble${variantName}Channels`指令结合，渠道包的生成目录默认存放在 `build/outputs/apk/`，也可以通过`walle`闭包中的`apkOutputFolder`参数来指定输出目录
+### 注意事项（命令生成渠道包 配合 配置插件 使用）
+* 第一步：首先确认app目录下的build.gradle文件下是否对进行了如下配置
+```java
+ productFlavors {
+        CommonFlavor {}
+    }
+```
+* 第二步：如果进行了上述配置的条件下，生成渠道包的命令将会改变。
+
+* 第三步：生成多渠道包的命令
+`./gradlew clean assembleCommonFlavorReleaseChannels`
+
+* 第四步：产生的原因  
+
+如何我们进行执行 `./gradlew clean assembleReleaseChannels` 命令时，会告诉我们命令不存在，
+因为我们在build.gradle中对productFlavor进行了配置，那么我们使用walle生成渠道包的时候就会对命令进行配置
+如：assemble  CommonFlavor   Release    Channels (将命令分割)
+没有任何配置的时候，我们的生成渠道包的命令： `./gradlew  assembleRelease`
+配置walle的时候，我们的生成渠道包的命令： `./gradlew  assembleReleaseChannels`
+配置walle和productFlavors的时候，我们的生成渠道包的命令： `./gradlew  assembleCommonFlavorReleaseChannels`
 
 用法示例：
 
